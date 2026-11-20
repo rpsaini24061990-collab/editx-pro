@@ -1,0 +1,18 @@
+{
+  "name": "EditX Pro — Photo & Video Studio",
+  "short_name": "EditX Pro",
+  "description": "All-in-One Photo & Video Editor. Created by Anshul Kumar Saini.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#080a0f",
+  "theme_color": "#0a0c12",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/1040/1040241.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
