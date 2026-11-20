@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  
+  <!-- Google SEO & Search Console Meta Tags -->
+  <title>EditX Pro — Free Online Photo & Video Editor | Created by Anshul Kumar Saini</title>
+  <meta name="description" content="EditX Pro is an all-in-one free photo and video editor with Magic Eraser, Slow-Mo/Fast-Mo speed control, cinematic filters, and unlimited local file size. Created by Anshul Kumar Saini." />
+  <meta name="keywords" content="EditX Pro, online video editor, photo editor, magic eraser, slow motion video, Anshul Kumar Saini, free editing app" />
+  <meta name="author" content="Anshul Kumar Saini" />
+  <meta name="robots" content="index, follow" />
+  <!-- Google Search Console Verification (अपना कोड यहाँ डालें) -->
+  <meta name="google-site-verification" content="YOUR_GOOGLE_SEARCH_CONSOLE_CODE" />
+
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:title" content="EditX Pro — All-in-One Photo & Video Studio" />
+  <meta property="og:description" content="Pro Photo & Video Editing in your browser. Magic Eraser, Filters, Speed Control & More." />
+  <meta property="og:type" content="website" />
+
+  <!-- PWA Manifest & Mobile Theme -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0a0c12" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- Google Identity Services (Google Sign-In) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!-- Structured Data for Google Search -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "EditX Pro",
+    "operatingSystem": "Web, Android, iOS",
+    "applicationCategory": "MultimediaApplication",
+    "author": {
+      "@type": "Person",
+      "name": "Anshul Kumar Saini"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR"
+    }
+  }
+  </script>
+
+  <style>
+    :root {
+      --bg: #080a0f;
+      --panel: #111520;
+      --card: #181e2e;
+      --border: #252e45;
+      --primary: #6c5ce7;
+      --accent: #00e5ff;
+      --pink: #ff2e93;
+      --text: #f1f5f9;
+      --muted: #8b9bb4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg); color: var(--text); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+
+    /* Header */
+    header {
+      height: 58px;
+      background: rgba(17, 21, 32, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      z-index: 20;
+      flex-shrink: 0;
+    }
+
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-title {
+      font-size: 1.2rem;
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      background: linear-gradient(135deg, #fff 20%, var(--accent), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-sub { font-size: 0.65rem; color: var(--muted); display: block; margin-top: -2px; }
+
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+
+    .btn {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 7px 12px;
+      border-radius: 9px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .btn:active { transform: scale(0.96); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #06080c;
+      border: none;
+      font-weight: 800;
+    }
+    .btn-install {
+      background: linear-gradient(135deg, var(--pink), #ff7b00);
+      color: #fff;
+      border: none;
+      display: none;
+    }
+
+    /* User Profile Chip */
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 229, 255, 0.1);
+      border: 1px solid rgba(0, 229, 255, 0.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .user-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--primary); display: grid; place-items: center; font-weight: bold; font-size: 0.7rem; }
+
+    /* Mode Switcher */
+    .mode-bar {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .mode-tab {
+      flex: 1;
+      max-width: 180px;
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .mode-tab.active {
+      background: linear-gradient(135deg, var(--primary), #4834d4);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 3px 12px rgba(108, 92, 231, 0.4);
+    }
+
+    /* Main Workspace */
+    .workspace {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Sidebar / Mobile Bottom Sheet */
+    .tools-panel {
+      width: 320px;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .card-title {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .slider-box { margin-bottom: 10px; }
+    .slider-box:last-child { margin-bottom: 0; }
+    .slider-label { display: flex; justify-content: space-between; font-size: 0.78rem; color: #cbd5e1; margin-bottom: 4px; }
+    input[type="range"] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+
+    .chip-btn {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 6px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .chip-btn.active, .chip-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .input-field {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+    }
+
+    /* Stage */
+    .stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      position: relative;
+      background: radial-gradient(circle at center, #141a2b 0%, #07090e 100%);
+      overflow: hidden;
+    }
+
+    .upload-box {
+      border: 2px dashed var(--border);
+      border-radius: 18px;
+      padding: 36px 24px;
+      text-align: center;
+      max-width: 400px;
+      background: rgba(24, 30, 46, 0.5);
+      cursor: pointer;
+      transition: 0.25s;
+    }
+    .upload-box:hover { border-color: var(--accent); }
+    .upload-box h2 { font-size: 1.15rem; margin: 10px 0 6px; }
+    .upload-box p { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+    canvas#photoCanvas {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+      background-image: linear-gradient(45deg, #1d2436 25%, transparent 25%),
+                        linear-gradient(-45deg, #1d2436 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #1d2436 75%),
+                        linear-gradient(-45deg, transparent 75%, #1d2436 75%);
+      background-size: 18px 18px;
+      background-position: 0 0, 0 9px, 9px -9px, -9px 0;
+      touch-action: none;
+      display: none;
+    }
+
+    video#videoPlayer {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 10px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.7);
+      display: none;
+    }
+
+    /* Footer */
+    footer {
+      height: 28px;
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      font-size: 0.7rem;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    /* Auth Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      display: none;
+      place-items: center;
+      z-index: 100;
+      padding: 20px;
+    }
+    .modal-overlay.open { display: grid; }
+    .modal-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+    }
+    .modal-box h3 { margin-bottom: 8px; font-size: 1.2rem; }
+    .modal-box p { font-size: 0.82rem; color: var(--muted); margin-bottom: 18px; line-height: 1.4; }
+    .google-btn {
+      width: 100%;
+      background: #fff;
+      color: #111;
+      border: none;
+      padding: 11px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .hidden { display: none !important; }
+
+    /* Mobile Responsive UI */
+    @media (max-width: 820px) {
+      .workspace { flex-direction: column-reverse; }
+      .tools-panel {
+        width: 100%;
+        height: 44vh;
+        border-right: none;
+        border-top: 1px solid var(--border);
+      }
+      .stage { height: 42vh; }
+      .brand-sub { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <!-- EditX Pro Custom SVG Logo -->
+      <svg width="34" height="34" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="64" height="64" rx="16" fill="url(#editxGrad)"/>
+        <path d="M18 18L46 46M46 18L18 46" stroke="#080A0F" stroke-width="7.5" stroke-linecap="round"/>
+        <circle cx="32" cy="32" r="6" fill="#00E5FF"/>
+        <defs>
+          <linearGradient id="editxGrad" x1="0" y1="0" x2="64" y2="64">
+            <stop stop-color="#6C5CE7"/>
+            <stop offset="0.55" stop-color="#00E5FF"/>
+            <stop offset="1" stop-color="#FF2E93"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div>
+        <span class="brand-title">EditX Pro</span>
+        <span class="brand-sub">Created by Anshul Kumar Saini</span>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-install" id="installBtn">Install App</button>
+      <div class="user-chip" id="authBtn" onclick="openAuthModal()">
+        <span class="user-avatar" id="userAvatar">G</span>
+        <span id="userName">Sign In</span>
+      </div>
+      <button class="btn" onclick="triggerUpload()">+ Open</button>
+      <button class="btn btn-primary" onclick="exportMedia()">Export</button>
+    </div>
+  </header>
+
+  <!-- Mode Bar -->
+  <div class="mode-bar">
+    <button class="mode-tab active" id="tabPhoto" onclick="switchMode('photo')">Photo Studio</button>
+    <button class="mode-tab" id="tabVideo" onclick="switchMode('video')">Video Studio</button>
+  </div>
+
+  <!-- Hidden File Inputs (Unlimited Local File Size) -->
+  <input type="file" id="photoInput" accept="image/*" class="hidden" />
+  <input type="file" id="videoInput" accept="video/*" class="hidden" />
+
+  <!-- Workspace -->
+  <div class="workspace">
+
+    <!-- PHOTO TOOLS -->
+    <aside class="tools-panel" id="photoTools">
+      <div class="card">
+        <div class="card-title">Pro Presets & Effects</div>
+        <div class="grid-3">
+          <button class="chip-btn" onclick="applyPreset('normal')">Original</button>
+          <button class="chip-btn" onclick="applyPreset('cinematic')">Cinematic</button>
+          <button class="chip-btn" onclick="applyPreset('vivid')">Vivid</button>
+          <button class="chip-btn" onclick="applyPreset('moody')">Moody</button>
+          <button class="chip-btn" onclick="applyPreset('retro')">Retro</button>
+          <button class="chip-btn" onclick="applyPreset('bw')">B & W</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Magic Eraser & Brush</div>
+        <div class="grid-3" style="margin-bottom:10px;">
+          <button class="chip-btn active" id="t-none" onclick="setTool('none')">Move</button>
+          <button class="chip-btn" id="t-eraser" onclick="setTool('eraser')">Magic Eraser</button>
+          <button class="chip-btn" id="t-brush" onclick="setTool('brush')">Brush</button>
+        </div>
+        <div class="slider-box">
+          <div class="slider-label"><span>Tool Size</span><span id="v-size">24px</span></div>
+          <input type="range" id="toolSize" min="4" max="100" value="24" oninput="document.getElementById('v-size').textContent=this.value+'px'">
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+          <span style="font-size:0.78rem; color:#cbd5e1;">Brush Color</span>
+          <input type="color" id="brushColor" value="#00e5ff" style="border:none; background:none; width:36px; height:26px;">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Light & Color Grading</div>
+        <div class="slider-box">
+          <div class="slider-label"><span>Brightness</span><span id="v-p-bright">100%</span></div>
+          <input type="range" id="p-bright" min="0" max="200" value="100" oninput="renderPhoto()">
+        </div>
+        <div class="slider-box">
+          <div class="slider-label"><span>Contrast</span><span id="v-p-contrast">100%</span></div>
+          <input type="range" id="p-contrast" min="0" max="200" value="100" oninput="renderPhoto()">
+        </div>
+        <div class="slider-box">
+          <div class="slider-label"><span>Saturation</span><span id="v-p-sat">100%</span></div>
+          <input type="range" id="p-sat" min="0" max="200" value="100" oninput="renderPhoto()">
+        </div>
+        <div class="slider-box">
+          <div class="slider-label"><span>Hue / Tone</span><span id="v-p-hue">0°</span></div>
+          <input type="range" id="p-hue" min="0" max="360" value="0" oninput="renderPhoto()">
+        </div>
+        <div class="slider-box">
+          <div class="slider-label"><span>Blur</span><span id="v-p-blur">0px</span></div>
+          <input type="range" id="p-blur" min="0" max="20" value="0" oninput="renderPhoto()">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Text & Transform</div>
+        <input type="text" id="textVal" class="input-field" placeholder="Add stylish text..." />
+        <div class="grid-2" style="margin-bottom:8px;">
+          <input type="color" id="textColor" value="#ffffff" style="width:100%; height:34px; border:none; border-radius:8px;">
+          <button class="btn" style="justify-content:center;" onclick="addText()">+ Add Text</button>
+        </div>
+        <div class="grid-3">
+          <button class="chip-btn" onclick="rotatePhoto()">Rotate</button>
+          <button class="chip-btn" onclick="flipPhoto()">Flip</button>
+          <button class="chip-btn" style="color:#ff4d6d;" onclick="resetPhoto()">Reset</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- VIDEO TOOLS -->
+    <aside class="tools-panel hidden" id="videoTools">
+      <div class="card">
+        <div class="card-title">Speed Control (Slow-Mo / Fast-Mo)</div>
+        <div class="slider-box">
+          <div class="slider-label"><span>Playback Speed</span><span id="v-speed-val">1.0x</span></div>
+          <input type="range" id="v-speed" min="0.25" max="4" step="0.25" value="1" oninput="setVideoSpeed(this.value)">
+        </div>
+        <div class="grid-3" style="margin-top:8px;">
+          <button class="chip-btn" onclick="setVideoSpeed(0.5)">0.5x Slow</button>
+          <button class="chip-btn" onclick="setVideoSpeed(1)">1.0x Normal</button>
+          <button class="chip-btn" onclick="setVideoSpeed(2)">2.0x Fast</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Video Effects & Filters</div>
+        <div class="grid-3" style="margin-bottom:10px;">
+          <button class="chip-btn" onclick="applyVideoEffect('none')">Normal</button>
+          <button class="chip-btn" onclick="applyVideoEffect('cinematic')">Cinematic</button>
+          <button class="chip-btn" onclick="applyVideoEffect('vintage')">Vintage</button>
+          <button class="chip-btn" onclick="applyVideoEffect('bw')">B & W</button>
+          <button class="chip-btn" onclick="applyVideoEffect('vivid')">Vivid</button>
+          <button class="chip-btn" onclick="applyVideoEffect('invert')">Neon</button>
+        </div>
+        <div class="slider-box">
+          <div class="slider-label"><span>Brightness</span><span id="v-vb">100%</span></div>
+          <input type="range" id="v-bright" min="20" max="200" value="100" oninput="updateVideoFilter()">
+        </div>
+        <div class="slider-box">
+          <div class="slider-label"><span>Contrast</span><span id="v-vc">100%</span></div>
+          <input type="range" id="v-contrast" min="20" max="200" value="100" oninput="updateVideoFilter()">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Trim & Audio</div>
+        <div class="grid-2" style="margin-bottom:8px;">
+          <input type="number" id="trimStart" class="input-field" placeholder="Start (s)" value="0" min="0">
+          <input type="number" id="trimEnd" class="input-field" placeholder="End (s)" value="0" min="0">
+        </div>
+        <div class="grid-2">
+          <button class="chip-btn" onclick="previewTrim()">Preview Cut</button>
+          <button class="chip-btn" id="muteBtn" onclick="toggleMute()">Mute Audio</button>
+        </div>
+        <button class="btn" style="width:100%; justify-content:center; margin-top:8px;" onclick="takeSnapshot()">Capture HD Frame</button>
+      </div>
+    </aside>
+
+    <!-- CENTER STAGE -->
+    <main class="stage">
+      <div class="upload-box" id="uploadBox" onclick="triggerUpload()">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#00e5ff" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        <h2 id="uploadHeading">Tap to Open Photo</h2>
+        <p>100% Private Local Engine • Unlimited File Size<br/>Supports 4K Photos & Large Videos</p>
+      </div>
+
+      <canvas id="photoCanvas"></canvas>
+      <video id="videoPlayer" controls playsinline></video>
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <span>EditX Pro • Private Local Processing</span>
+    <span><strong>Created by Anshul Kumar Saini</strong></span>
+  </footer>
+
+  <!-- Google Sign-In & Privacy Modal -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-box">
+      <h3>Sign in to EditX Pro</h3>
+      <p>Your files stay 100% private on your device. Sign in with Google to save your workspace preferences securely.</p>
+      
+      <!-- Real Google Identity Button Container -->
+      <div id="g_id_onload"
+           data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+           data-callback="handleGoogleCredential"
+           data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin" data-type="standard" data-size="large" data-theme="filled_blue" data-width="300"></div>
+
+      <!-- Instant Local / Demo Sign-In Fallback -->
+      <button class="google-btn" style="margin-top:12px;" onclick="demoGoogleLogin()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continue with Google (Quick Mode)
+      </button>
+
+      <button class="btn" style="width:100%; justify-content:center;" onclick="closeAuthModal()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // --- PWA Service Worker & Install Prompt ---
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('installBtn').style.display = 'inline-flex';
+    });
+    document.getElementById('installBtn').addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt = null;
+      document.getElementById('installBtn').style.display = 'none';
+    });
+
+    // --- Google Auth Logic ---
+    function openAuthModal() { document.getElementById('authModal').classList.add('open'); }
+    function closeAuthModal() { document.getElementById('authModal').classList.remove('open'); }
+
+    function handleGoogleCredential(response) {
+      const payload = JSON.parse(atob(response.credential.split('.')[1]));
+      setLoggedInUser(payload.given_name || payload.name);
+      closeAuthModal();
+    }
+
+    function demoGoogleLogin() {
+      const name = prompt("Enter your display name:", "Anshul");
+      if (name) {
+        setLoggedInUser(name);
+        closeAuthModal();
+      }
+    }
+
+    function setLoggedInUser(name) {
+      localStorage.setItem('editx_user', name);
+      document.getElementById('userName').textContent = name;
+      document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+    }
+    const savedUser = localStorage.getItem('editx_user');
+    if (savedUser) setLoggedInUser(savedUser);
+
+    // --- Core Editor State ---
+    let mode = 'photo';
+    let originalImg = null;
+    let rotation = 0, flipH = 1;
+    let activeTool = 'none';
+    let isDrawing = false;
+
+    const canvas = document.getElementById('photoCanvas');
+    const ctx = canvas.getContext('2d');
+    const overlayCanvas = document.createElement('canvas');
+    const oCtx = overlayCanvas.getContext('2d');
+    const video = document.getElementById('videoPlayer');
+    const uploadBox = document.getElementById('uploadBox');
+
+    function switchMode(newMode) {
+      mode = newMode;
+      document.getElementById('tabPhoto').classList.toggle('active', mode === 'photo');
+      document.getElementById('tabVideo').classList.toggle('active', mode === 'video');
+      document.getElementById('photoTools').classList.toggle('hidden', mode !== 'photo');
+      document.getElementById('videoTools').classList.toggle('hidden', mode !== 'video');
+
+      if (mode === 'photo') {
+        video.pause();
+        video.style.display = 'none';
+        canvas.style.display = originalImg ? 'block' : 'none';
+        uploadBox.classList.toggle('hidden', !!originalImg);
+        document.getElementById('uploadHeading').textContent = 'Tap to Open Photo';
+      } else {
+        canvas.style.display = 'none';
+        video.style.display = video.src ? 'block' : 'none';
+        uploadBox.classList.toggle('hidden', !!video.src);
+        document.getElementById('uploadHeading').textContent = 'Tap to Open Video';
+      }
+    }
+
+    function triggerUpload() {
+      document.getElementById(mode === 'photo' ? 'photoInput' : 'videoInput').click();
+    }
+
+    // Load Photo
+    document.getElementById('photoInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const img = new Image();
+      img.onload = () => {
+        originalImg = img;
+        rotation = 0; flipH = 1;
+        canvas.width = img.width;
+        canvas.height = img.height;
+        overlayCanvas.width = img.width;
+        overlayCanvas.height = img.height;
+        oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+        uploadBox.classList.add('hidden');
+        canvas.style.display = 'block';
+        renderPhoto();
+      };
+      img.src = URL.createObjectURL(file);
+    });
+
+    // Load Video
+    document.getElementById('videoInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      video.src = URL.createObjectURL(file);
+      uploadBox.classList.add('hidden');
+      video.style.display = 'block';
+      video.onloadedmetadata = () => {
+        document.getElementById('trimStart').value = 0;
+        document.getElementById('trimEnd').value = Math.floor(video.duration);
+      };
+    });
+
+    // Photo Render
+    function renderPhoto() {
+      if (!originalImg) return;
+      const b = document.getElementById('p-bright').value;
+      const c = document.getElementById('p-contrast').value;
+      const s = document.getElementById('p-sat').value;
+      const h = document.getElementById('p-hue').value;
+      const bl = document.getElementById('p-blur').value;
+
+      document.getElementById('v-p-bright').textContent = b + '%';
+      document.getElementById('v-p-contrast').textContent = c + '%';
+      document.getElementById('v-p-sat').textContent = s + '%';
+      document.getElementById('v-p-hue').textContent = h + '°';
+      document.getElementById('v-p-blur').textContent = bl + 'px';
+
+      const rotated = rotation % 180 !== 0;
+      canvas.width = rotated ? originalImg.height : originalImg.width;
+      canvas.height = rotated ? originalImg.width : originalImg.height;
+
+      ctx.save();
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.filter = `brightness(${b}%) contrast(${c}%) saturate(${s}%) hue-rotate(${h}deg) blur(${bl}px)`;
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate((rotation * Math.PI) / 180);
+      ctx.scale(flipH, 1);
+      ctx.drawImage(originalImg, -originalImg.width / 2, -originalImg.height / 2);
+      ctx.restore();
+
+      ctx.drawImage(overlayCanvas, 0, 0, canvas.width, canvas.height);
+    }
+
+    function applyPreset(name) {
+      const map = {
+        normal:    [100, 100, 100, 0, 0],
+        cinematic: [95, 128, 82, 0, 0],
+        vivid:     [108, 120, 160, 0, 0],
+        moody:     [85, 130, 75, 195, 0],
+        retro:     [106, 92, 68, 18, 0],
+        bw:        [100, 135, 0, 0, 0]
+      };
+      const [b, c, s, h, bl] = map[name];
+      document.getElementById('p-bright').value = b;
+      document.getElementById('p-contrast').value = c;
+      document.getElementById('p-sat').value = s;
+      document.getElementById('p-hue').value = h;
+      document.getElementById('p-blur').value = bl;
+      renderPhoto();
+    }
+
+    function setTool(t) {
+      activeTool = t;
+      ['none', 'eraser', 'brush'].forEach(id => {
+        document.getElementById('t-' + id).classList.toggle('active', id === t);
+      });
+    }
+
+    // Touch & Mouse Drawing / Magic Eraser
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: (clientX - rect.left) * (canvas.width / rect.width),
+        y: (clientY - rect.top) * (canvas.height / rect.height)
+      };
+    }
+
+    function startDraw(e) {
+      if (activeTool === 'none' || !originalImg) return;
+      isDrawing = true;
+      drawAction(e);
+    }
+    function moveDraw(e) { if (isDrawing) drawAction(e); }
+    function endDraw() { isDrawing = false; }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', moveDraw);
+    window.addEventListener('mouseup', endDraw);
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', (e) => { if(isDrawing) e.preventDefault(); moveDraw(e); }, { passive: false });
+    window.addEventListener('touchend', endDraw);
+
+    function drawAction(e) {
+      const { x, y } = getPos(e);
+      const size = parseInt(document.getElementById('toolSize').value) * (canvas.width / 700);
+      if (activeTool === 'brush') {
+        oCtx.fillStyle = document.getElementById('brushColor').value;
+        oCtx.beginPath();
+        oCtx.arc(x, y, size / 2, 0, Math.PI * 2);
+        oCtx.fill();
+        renderPhoto();
+      } else if (activeTool === 'eraser') {
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function addText() {
+      const txt = document.getElementById('textVal').value.trim();
+      if (!txt || !originalImg) return;
+      const fontSize = Math.max(36, Math.floor(canvas.width / 13));
+      oCtx.font = `800 ${fontSize}px Segoe UI, sans-serif`;
+      oCtx.fillStyle = document.getElementById('textColor').value;
+      oCtx.textAlign = 'center';
+      oCtx.shadowColor = 'rgba(0,0,0,0.75)';
+      oCtx.shadowBlur = 12;
+      oCtx.fillText(txt, overlayCanvas.width / 2, overlayCanvas.height / 2);
+      oCtx.shadowBlur = 0;
+      renderPhoto();
+    }
+
+    function rotatePhoto() { rotation = (rotation + 90) % 360; renderPhoto(); }
+    function flipPhoto() { flipH *= -1; renderPhoto(); }
+    function resetPhoto() {
+      rotation = 0; flipH = 1;
+      oCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+      applyPreset('normal');
+    }
+
+    // Video Tools
+    function setVideoSpeed(val) {
+      document.getElementById('v-speed').value = val;
+      document.getElementById('v-speed-val').textContent = val + 'x';
+      video.playbackRate = parseFloat(val);
+    }
+
+    let extraVideoEffect = '';
+    function applyVideoEffect(eff) {
+      const effects = {
+        none: '',
+        cinematic: 'saturate(85%) contrast(125%)',
+        vintage: 'sepia(55%) contrast(95%)',
+        bw: 'grayscale(100%) contrast(130%)',
+        vivid: 'saturate(165%) contrast(115%)',
+        invert: 'invert(90%) hue-rotate(180deg)'
+      };
+      extraVideoEffect = effects[eff] || '';
+      updateVideoFilter();
+    }
+
+    function updateVideoFilter() {
+      const b = document.getElementById('v-bright').value;
+      const c = document.getElementById('v-contrast').value;
+      document.getElementById('v-vb').textContent = b + '%';
+      document.getElementById('v-vc').textContent = c + '%';
+      video.style.filter = `brightness(${b}%) contrast(${c}%) ${extraVideoEffect}`;
+    }
+
+    function toggleMute() {
+      video.muted = !video.muted;
+      document.getElementById('muteBtn').textContent = video.muted ? 'Unmute Audio' : 'Mute Audio';
+    }
+
+    function previewTrim() {
+      const s = parseFloat(document.getElementById('trimStart').value) || 0;
+      const e = parseFloat(document.getElementById('trimEnd').value) || video.duration;
+      video.currentTime = s;
+      video.play();
+      const stopper = () => {
+        if (video.currentTime >= e) {
+          video.pause();
+          video.removeEventListener('timeupdate', stopper);
+        }
+      };
+      video.addEventListener('timeupdate', stopper);
+    }
+
+    function takeSnapshot() {
+      if (!video.src) return;
+      const c = document.createElement('canvas');
+      c.width = video.videoWidth; c.height = video.videoHeight;
+      const x = c.getContext('2d');
+      x.filter = video.style.filter || 'none';
+      x.drawImage(video, 0, 0);
+      const a = document.createElement('a');
+      a.download = 'EditXPro-Frame.png';
+      a.href = c.toDataURL('image/png');
+      a.click();
+    }
+
+    // Export
+    function exportMedia() {
+      if (mode === 'photo') {
+        if (!originalImg) return alert('Please open a photo first.');
+        const a = document.createElement('a');
+        a.download = 'EditXPro-Photo.png';
+        a.href = canvas.toDataURL('image/png', 1.0);
+        a.click();
+      } else {
+        if (!video.src) return alert('Please open a video first.');
+        alert('Exporting edited video... Please wait while the clip plays.');
+        const s = parseFloat(document.getElementById('trimStart').value) || 0;
+        const e = parseFloat(document.getElementById('trimEnd').value) || video.duration;
+        const recC = document.createElement('canvas');
+        recC.width = video.videoWidth; recC.height = video.videoHeight;
+        const rCtx = recC.getContext('2d');
+        const recorder = new MediaRecorder(recC.captureStream(30), { mimeType: 'video/webm' });
+        const chunks = [];
+        recorder.ondataavailable = ev => { if (ev.data.size > 0) chunks.push(ev.data); };
+        recorder.onstop = () => {
+          const a = document.createElement('a');
+          a.download = 'EditXPro-Video.webm';
+          a.href = URL.createObjectURL(new Blob(chunks, { type: 'video/webm' }));
+          a.click();
+        };
+        video.currentTime = s;
+        video.play();
+        recorder.start();
+        (function loop() {
+          if (video.paused || video.currentTime >= e) { video.pause(); recorder.stop(); return; }
+          rCtx.filter = video.style.filter || 'none';
+          rCtx.drawImage(video, 0, 0, recC.width, recC.height);
+          requestAnimationFrame(loop);
+        })();
+      }
+    }
+  </script>
+</body>
+</html>
